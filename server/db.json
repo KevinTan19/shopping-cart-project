@@ -1,40 +1,48 @@
 {
-    "products": [
-        {
-        "id": 1,
-        "title": "orson",
-        "description": "orson is good",
-        "stock": 100,
-        "price": 10000,
-        "image": "https://picsum.photos/200/200"
-        },
-        {
-        "id": 2,
-        "title": "indomie",
-        "description": "mantap",
-        "stock": 100,
-        "price": 25000,
-        "image": "https://picsum.photos/200/200"
-        }
-    ],
-    "carts": [
-        {
-        "id": 1,
-        "userId": 1,
-        "productId": 1,
-        "total": 4
-        },
-        {
-        "id": 2,
-        "userId": 1,
-        "productId": 2,
-        "total": 2
-        }
-    ],
-    "users": [
-        {
-        "id": 1,
-        "name": "kanban"
-        }
-    ]
+  "products": [
+    {
+      "id": 1,
+      "title": "orson",
+      "description": "orson is good",
+      "stock": 100,
+      "price": 10000,
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "id": 2,
+      "title": "indomie",
+      "description": "mantap",
+      "stock": 100,
+      "price": 25000,
+      "image": "https://picsum.photos/200/200"
+    },
+    {
+      "title": "Kopi abc",
+      "description": "Kopi a b dan c",
+      "stock": "50",
+      "price": "10000",
+      "image": "test",
+      "id": 3
+    }
+  ],
+  "carts": [
+    {
+      "id": 1,
+      "userId": 1,
+      "productId": 1,
+      "total": 4
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "productId": 2,
+      "total": 2
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "kanban"
+    }
+  ]
 }
