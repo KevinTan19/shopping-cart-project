@@ -10,12 +10,15 @@ import {
   Text,
   Button,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import CardComponent from "./components/Card";
-const BASE_URL = "https://a862-180-247-164-80.ap.ngrok.io/";
+
+/////// read README for BASE URL ///////
+const BASE_URL = "https://5b60-180-247-164-80.ap.ngrok.io/";
 
 export default function App() {
   const [products, setProducts] = useState([]);
@@ -30,11 +33,29 @@ export default function App() {
   const [image, setImage] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
-  const renderItem = ({ item }) => <CardComponent product={item} />;
+  const renderItem = ({ item }) => (
+    <CardComponent product={item} carts={carts} deleteProduct={deleteProduct} />
+  );
 
-  const plus = () => {};
-
-  const minus = () => {};
+  const deleteProduct = (id) => {
+    fetch(`${BASE_URL}products/${id}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response);
+        } else {
+          setProducts(products.filter((product) => product.id !== id));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const addProduct = () => {
     let payload = {
@@ -56,8 +77,12 @@ export default function App() {
         if (!response.ok) {
           throw new Error(response);
         } else {
-          setProducts([...products, payload]);
+          return response.json();
         }
+      })
+      .then((data) => {
+        setModalVisible(!modalVisible);
+        setProducts([...products, data]);
       })
       .catch((err) => {
         console.log(err);
@@ -118,7 +143,12 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-
+      <FlatList
+        data={products}
+        renderItem={renderItem}
+        keyExtractor={(product) => product.id}
+        style={styles.flatList}
+      />
       <Modal
         animationType="slide"
         transparent={true}
@@ -166,45 +196,39 @@ export default function App() {
           </View>
         </View>
       </Modal>
-
-      <FlatList
-        data={products}
-        renderItem={renderItem}
-        keyExtractor={(product) => product.id}
-        style={styles.flatList}
-      />
-      <Text>Dummy product</Text>
-      <View
-        style={{
-          flex: 1,
-          width: "90%",
-          backgroundColor: "white",
-          margin: 15,
-        }}
-      >
-        <View>
-          <AntDesign name="shoppingcart" size={24} color="black" />
-          <Text>Total - Rp. {total}</Text>
-          <Pressable
-            style={[styles.button, styles.buttonOpen]}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={styles.textStyle}>+</Text>
-          </Pressable>
-        </View>
+      <ScrollView>
         <View
           style={{
             flex: 1,
             width: "90%",
+            backgroundColor: "white",
             margin: 15,
-            alignItems: "center",
-            justifyContent: "flex-start",
           }}
         >
-          <Button color="red" title="close" />
-          <Button title="Go to Checkout" />
+          <View>
+            <AntDesign name="shoppingcart" size={24} color="black" />
+            <Text>Total - Rp. {total}</Text>
+            <Pressable
+              style={[styles.button, styles.buttonOpen]}
+              onPress={() => setModalVisible(true)}
+            >
+              <Text style={styles.textStyle}>+</Text>
+            </Pressable>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              width: "90%",
+              margin: 15,
+              alignItems: "center",
+              justifyContent: "flex-start",
+            }}
+          >
+            <Button color="red" title="close" />
+            <Button title="Go to Checkout" />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

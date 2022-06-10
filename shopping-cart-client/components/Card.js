@@ -1,6 +1,28 @@
 import { Button, Card, Title, Paragraph } from "react-native-paper";
 import { StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
 export default function CardComponent(props) {
+  const [inputTotal, setInputTotal] = useState(0);
+
+  const plus = () => {
+    let data = inputTotal;
+    setInputTotal((data += 1));
+  };
+
+  const minus = () => {
+    let data = inputTotal;
+    setInputTotal((data -= 1));
+  };
+
+  useEffect(() => {
+    if (props.carts) {
+      for (let i = 0; i < props.carts.length; i++) {
+        if (props.carts[i].productId === props.product.id) {
+          setInputTotal(props.carts[i].total);
+        }
+      }
+    }
+  }, []);
   return (
     <Card style={styles.card}>
       <Card.Cover source={{ uri: props.product.image }} style={styles.image} />
@@ -18,11 +40,20 @@ export default function CardComponent(props) {
         {props.product.price}
       </Paragraph>
       <Card.Actions style={{ alignSelf: "flex-end" }}>
-        <Button onPress={() => {}} color="red">
+        <Paragraph>{inputTotal}</Paragraph>
+        <Button onPress={minus} color="red">
           -
         </Button>
-        <Button onPress={() => {}} color="blue">
+        <Button onPress={plus} color="blue">
           +
+        </Button>
+        <Button
+          onPress={() => {
+            props.deleteProduct(props.product.id);
+          }}
+          color="red"
+        >
+          Delete
         </Button>
       </Card.Actions>
     </Card>
